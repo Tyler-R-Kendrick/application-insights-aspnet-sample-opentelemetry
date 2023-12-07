@@ -39,14 +39,20 @@ public class BaseWorker : BackgroundService
     }
 }
 
-public class Worker(ILogger<Worker> logger)
-    : BaseWorker(logger, () => TimeSpan.FromSeconds(1))
+public class Worker : BaseWorker
+    {
+    public Worker(ILogger<Worker> logger) : base(logger, () => TimeSpan.FromSeconds(1))
     {
     }
-public class ExceptionWorker(ILogger<ExceptionWorker> logger)
-    : BaseWorker(logger, () => TimeSpan.FromSeconds(Random.Shared.Next(1, 10)))
+}
+public class ExceptionWorker : BaseWorker
 {
     private readonly Random random = new();
+
+    public ExceptionWorker(ILogger<ExceptionWorker> logger) : base(logger, () => TimeSpan.FromSeconds(Random.Shared.Next(1, 10)))
+    {
+    }
+
     protected override Task OnExecute(CancellationToken stoppingToken)
     {
         throw new Exception("Worker Exception!");
