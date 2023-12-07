@@ -1,10 +1,16 @@
 namespace WebApp;
 
-public class BaseWorker(ILogger<BackgroundService> logger, Func<TimeSpan> delay) : BackgroundService
+public class BaseWorker : BackgroundService
 {
     readonly Guid _traceID = Guid.NewGuid();
-    private readonly ILogger<BackgroundService> _logger = logger;
-    private readonly Func<TimeSpan> _delay = delay;
+    private readonly ILogger<BackgroundService> _logger;
+    private readonly Func<TimeSpan> _delay;
+
+    public BaseWorker(ILogger<BackgroundService> logger, Func<TimeSpan> delay)
+    {
+        _logger = logger;
+        _delay = delay;
+    }
 
     private string LogMessage => $"Worker {_traceID} running at: {{time}}";
     protected sealed override async Task ExecuteAsync(CancellationToken stoppingToken)
